@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BISCUTE - Breed Identification & Care</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        select, input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input[type="file"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        #results {
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .result-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 12px;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .breed-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .breed-name {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .confidence {
+            color: #28a745;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .care-tips {
+            background: white;
+            padding: 0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .care-tips h3 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            margin: 0;
+            font-size: 1.2em;
+        }
+        
+        .care-content {
+            padding: 20px;
+        }
+        
+        .care-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .care-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .care-section h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .care-section p {
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .care-section ul {
+            margin: 10px 0 0 20px;
+            color: #555;
+        }
+        
+        .care-section li {
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #888;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 BISCUTE</h1>
+        <p class="subtitle">Breed Identification & Specific Care Utility Tool Engine</p>
+        
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="petType">Select Pet Type:</label>
+                <select id="petType" name="pet_type" required>
+                    <option value="dog">🐕 Dog</option>
+                    <option value="cat">🐈 Cat</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="imageInput">Upload Photo:</label>
+                <input type="file" id="imageInput" name="image" accept="image/*" required>
+            </div>
+            
+            <button type="submit" id="submitBtn">🔍 Identify Breed & Get Care Tips</button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing image...</p>
+        </div>
+        
+        <div class="error" id="error"></div>
+        
+        <div id="results">
+            <img id="resultImage" class="result-image" src="" alt="Uploaded pet">
+            
+            <div class="breed-info">
+                <div class="breed-name" id="breedName"></div>
+                <div class="confidence" id="confidence"></div>
+            </div>
+            
+            <div class="care-tips">
+                <h3>📋 Specific Care Recommendations</h3>
+                <div class="care-content" id="careTips"></div>
+            </div>
+        </div>
+
+        <footer>
+            Made with ❤️ for pet lovers | BISCUTE v1.0
+        </footer>
+    </div>
+    
+    <script>
+        function formatCareTips(text) {
+            const icons = {
+                'overview': '📖',
+                'diet': '🍖',
+                'nutrition': '🍖',
+                'exercise': '🏃',
+                'grooming': '✂️',
+                'health': '🏥',
+                'temperament': '🐕'
+            };
+            
+            const sections = text.split(/\*\*(.+?)\*\*/g);
+            let html = '';
+            
+            for (let i = 1; i < sections.length; i += 2) {
+                const title = sections[i].trim();
+                const content = sections[i + 1].trim();
+                
+                if (!content) continue;
+                
+                // Find matching icon
+                const iconKey = Object.keys(icons).find(key => 
+                    title.toLowerCase().includes(key)
+                );
+                const icon = iconKey ? icons[iconKey] : '📌';
+                
+                // Check if content has bullet points
+                const lines = content.split('\n').filter(l => l.trim());
+                let formattedContent = '';
+                
+                if (lines.some(l => l.trim().startsWith('-'))) {
+                    const items = lines
+                        .filter(l => l.trim().startsWith('-'))
+                        .map(l => `<li>${l.replace(/^-\s*/, '').trim()}</li>`)
+                        .join('');
+                    formattedContent = `<ul>${items}</ul>`;
+                } else {
+                    formattedContent = `<p>${lines.join(' ')}</p>`;
+                }
+                
+                html += `
+                    <div class="care-section">
+                        <h4>${icon} ${title}</h4>
+                        ${formattedContent}
+                    </div>
+                `;
+            }
+            
+            return html || `<p>${text}</p>`;
+        }
+        
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+            
+            // Reset UI
+            results.style.display = 'none';
+            error.style.display = 'none';
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/classify', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Classification failed');
+                }
+                
+                // Display results
+                document.getElementById('resultImage').src = data.image;
+                document.getElementById('breedName').textContent = data.breed;
+                document.getElementById('confidence').textContent = `Confidence: ${data.confidence}`;
+                
+                // Format care tips nicely
+                const careTipsElement = document.getElementById('careTips');
+                careTipsElement.innerHTML = formatCareTips(data.care_tips);
+                
+                results.style.display = 'block';
+                
+            } catch (err) {
+                error.textContent = `❌ ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

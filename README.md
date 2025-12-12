@@ -1,14 +1,16 @@
 # 🐾 BISCUTE
 
-## 👨‍💻 Team Member
+## 👨‍💻 Team Member [Alphabetical Order]
 
 - Ferdi Fadillah
 - Meghana Gudamsetty
 - Raquel Brown
 - Vincent G. Capone
 
-## Presentation
-[Biscute-Presentation](https://github.com/ferdifdi/BISCUTE/blob/main/BISCUTE-presentation.pdf)
+## Quick Links
+- **Presentation**: [Biscute-Presentation](https://github.com/ferdifdi/BISCUTE/blob/main/BISCUTE-presentation.pdf)
+- **Our Github for Finetuning the Model**: [cat_breeds_classifier_extended_breeds](https://github.com/ferdifdi/cat_breeds_classifier_extended_breeds)
+- **Model**: [ferdifdi/cat-breed-60-classes](https://huggingface.co/ferdifdi/cat-breed-60-classes)
 
 ## About this Project
 

@@ -4,3 +4,5 @@ groq>=0.4.0
 transformers>=4.35.0
 torch>=2.0.0
 python-dotenv>=1.0.0
+ml_dtypes>=0.3.0
+opt-einsum>=3.3.0

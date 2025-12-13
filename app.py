@@ -1,3 +1,9 @@
+import os
+# Force transformers to use PyTorch only (disable TensorFlow and JAX)
+os.environ['USE_TF'] = 'NO'
+os.environ['USE_TORCH'] = 'YES'
+os.environ['USE_JAX'] = 'NO'
+
 from flask import Flask, request, render_template, jsonify
 import requests
 import base64
@@ -6,7 +12,6 @@ from PIL import Image
 from groq import Groq
 from transformers import AutoImageProcessor, AutoModelForImageClassification
 import torch
-import os
 from dotenv import load_dotenv
 
 # Load environment variables

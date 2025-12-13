@@ -1,4 +1,4 @@
-# Environment variables
+# Environment Variables
 .env
 .env.local
 
@@ -27,7 +27,7 @@ wheels/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Virtual environments
+# Virtual Environments
 .conda/
 venv/
 ENV/

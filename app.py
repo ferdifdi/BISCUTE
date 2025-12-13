@@ -14,7 +14,7 @@ from transformers import AutoImageProcessor, AutoModelForImageClassification
 import torch
 from dotenv import load_dotenv
 
-# Load environment variables
+# Load Environment Variables
 load_dotenv()
 
 app = Flask(__name__)
@@ -22,7 +22,7 @@ app = Flask(__name__)
 # API Keys
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
-# Local model paths (update these to your model locations)
+# Local Model paths (update these to your model locations)
 DOG_MODEL_PATH = "./dog-breeds-multiclass-image-classification-with-vit"
 CAT_MODEL_PATH = "./cat-breed-60-classes"
 
